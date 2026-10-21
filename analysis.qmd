@@ -1,0 +1,64 @@
+---
+title: "Exploring Storms"
+author: "Dustin Tharp"
+execute:
+  echo: false
+---
+
+```{r}
+#| label: setup
+#| message: false
+
+library(tidyverse)
+```
+
+```{r}
+#| label: plot-storms
+
+storms |>
+  filter(status %in% c("tropical depression", "tropical storm", "hurricane")) |>
+  distinct(year, name, status) |>
+  count(year, status) |>
+  complete(year, status, fill = list(n = 0)) |> # Fill missing year/status pairs with 0 for smooth stacking
+  ggplot(aes(x = year, y = n, fill = status)) +
+  geom_area() +
+  scale_fill_manual(
+    values = c(
+      "tropical depression" = "lightblue",
+      "tropical storm" = "orange",
+      "hurricane" = "darkred"
+    )
+  ) +
+  labs(
+    title = "Named Storms per Year by Storm Type",
+    x = "Year",
+    y = "Number of Storms",
+    fill = "Storm Type"
+  )
+```
+
+```{r}
+#| label: print-storms
+#| cache: true
+storms_recent <- storms |>
+  filter(year >= 2000) |>
+  select(year, name, status, wind, pressure)
+```
+
+```{r}
+#| label: plot-pressure-wind
+
+storms_recent |>
+  ggplot(aes(x = wind, y = pressure, color = status)) +
+  geom_point(alpha = 0.5) + # Semi-transparent points reveal overlapping observations
+  labs(
+    title = "Storm Air Pressure vs. Wind Speed (2000–Present)",
+    subtitle = "Stronger storms have higher wind speeds and lower central air pressure",
+    x = "Wind Speed (knots)",
+    y = "Air Pressure (millibars)",
+    color = "Storm Status"
+  )
+```
+
+
+

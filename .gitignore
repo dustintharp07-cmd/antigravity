@@ -1,0 +1,14 @@
+# R temporary and session files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Quarto cache and build artifacts
+/.quarto/
+*_files/
+*_cache/
+*.html
+
+# OS files
+.DS_Store
